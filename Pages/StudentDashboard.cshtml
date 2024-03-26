@@ -1,0 +1,118 @@
+﻿@page
+@model LanguageApp.Pages.StudentDashboardModel
+@{
+}
+
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">StudentDashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/StudentDashboard">StudentDashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/leaderboard">leaderboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<button type="button" id="startTimer">Start Test</button>
+<div style="color:red;" id="timer"></div>
+
+<div id="questionListContainer">
+    @foreach (var course in Model.CourseList)
+    {
+        <h2>@course.Text</h2>
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            @foreach (var question in Model.QuestionList.Where(q => q.CourseID == int.Parse(course.Value)))
+            {
+                <div class="accordion-item" id="@("accordionItem" + question.QuestionID)">
+                    <h2 class="accordion-header" id="@("heading" + question.QuestionID)">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="@("#collapse" + question.QuestionID)" aria-expanded="false" aria-controls="@("collapse" + question.QuestionID)" disabled>
+                            @question.QuestionText
+                        </button>
+                    </h2>
+                    <div id="@("collapse" + question.QuestionID)" class="accordion-collapse collapse" aria-labelledby="@("heading" + question.QuestionID)" data-bs-parent="#accordionFlushExample">
+                        <br />
+                        <br />
+                        <form method="post" class="post">
+                            <h2>Answer the Question</h2>
+                            <input type="hidden" name="QuestionID" value="@question.QuestionID" />
+                            <input class="form-control form-control-sm" type="text" placeholder="Answer Question" aria-label=".form-control-sm example" name="AnswerText" required>
+                            <br />
+                            <div class="form-group submit-btn">
+                                <input type="submit" value="Post Answer">
+                            </div>
+                        </form>
+                        <h3>Answers:</h3>
+                        <ul>
+                            @foreach (var answer in Model.AnswersList.Where(a => a.QuestionID == question.QuestionID))
+                            {
+                                @if (answer.IsCorrect.HasValue && answer.IsCorrect.Value)
+                                {
+                                    <ion-icon name="checkmark-outline" style="color:green;"></ion-icon>
+                                }
+                                else
+                                {
+                                    <ion-icon name="close-outline" style="color:red;"></ion-icon>
+                                }
+                                <li>@answer.UserProvidedAnswer</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    var timer;
+    var seconds = 0;
+    var timerStarted = false;
+
+    document.getElementById('startTimer').addEventListener('click', function () {
+        startTimer();
+    });
+
+    function startTimer() {
+        timer = setInterval(function () {
+            seconds++;
+            updateTimerDisplay();
+
+            if (seconds === 1000) {
+                window.location.href = '/Index';
+            }
+        }, 1000);
+
+        timerStarted = true;
+        enableAccordionItems(); 
+    }
+
+    function updateTimerDisplay() {
+        var minutes = Math.floor(seconds / 60);
+        var remainingSeconds = seconds % 60;
+
+        document.getElementById('timer').innerHTML = 'Timer: ' + minutes + 'm ' + remainingSeconds + 's';
+    }
+
+    function enableAccordionItems() {
+        if (timerStarted) {
+            var accordionItems = document.querySelectorAll('.accordion-item button');
+            accordionItems.forEach(function (item) {
+                item.disabled = false;
+            });
+        }
+    }
+</script>
+

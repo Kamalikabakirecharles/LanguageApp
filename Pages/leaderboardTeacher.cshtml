@@ -1,0 +1,85 @@
+﻿@page
+@model LanguageApp.Pages.leaderboardTeacherModel
+@{
+}
+
+<!-- Include Ionicons script -->
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+<!-- Page Header -->
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">InstructorDashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Courses">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Questions">Questions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/MarkQuestions">MarkQuestions</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/leaderboardTeacher">leaderboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- Display User Performance Table -->
+@if (Model.UserPerformances != null && Model.UserPerformances.Any())
+{
+    <h2>Students Performance</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Total Questions</th>
+                <th>Total Answers</th>
+                <th>Correct Answers</th>
+                <th>Wrong Answers</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var performance in Model.UserPerformances)
+            {
+                <tr>
+                    <td>@performance.CourseName</td>
+                    <td>@performance.TotalQuestions</td>
+                    <td>@performance.TotalAnswers</td>
+                    <td>@performance.CorrectAnswers</td>
+                    <td>@performance.WrongAnswers</td>
+                    <td>@CalculatePercentage(performance.CorrectAnswers, performance.TotalAnswers)%</td>
+                </tr>
+            }
+        </tbody>
+        <tr>
+            <td colspan="7">
+                <form method="post">
+                    <button type="submit" class="btn btn-primary" asp-page-handler="DownloadPdf">Download PDF</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+}
+
+@functions {
+    // Helper method to calculate percentage
+    private double CalculatePercentage(int numerator, int denominator)
+    {
+        return denominator == 0 ? 0 : Math.Round(((double)numerator / denominator) * 100, 2);
+    }
+}

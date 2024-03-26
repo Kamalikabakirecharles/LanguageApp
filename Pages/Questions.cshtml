@@ -1,0 +1,69 @@
+﻿@page
+@model LanguageApp.Pages.QuestionsModel
+@{
+    ViewData["Title"] = "Questions";
+}
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">TeacherDashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Courses">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Questions">Questions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/MarkQuestions">MarkQuestions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/leaderboardTeacher">leaderboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+
+    @if (Model.message.Length > 1)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Hello!</strong> @Model.message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    }
+
+    <h1>Questions Form</h1>
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="courseDropdown" class="form-label">Select Course:</label>
+            <select class="form-control" id="courseDropdown" name="CourseID">
+                @foreach (var course in Model.CoursesList)
+                {
+                    <option value="@course.CourseID">@course.CourseName</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="questionText" class="form-label">Question Text:</label>
+            <textarea class="form-control" id="questionText" name="QuestionText"  rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="correctAnswer" class="form-label">Correct Answer:</label>
+            <input type="text" class="form-control" id="correctAnswer" name="CorrectAnswer" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>

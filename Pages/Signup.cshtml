@@ -1,0 +1,38 @@
+﻿@page
+@model LanguageApp.Pages.SignupModel
+@{
+}
+
+<div class="container">
+
+    @if (Model.message.Length > 1)
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Hello!</strong> @Model.message
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+
+    }
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">UserName</label>
+            <input type="text" class="form-control" id="username" aria-describedby="emailHelp" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="userType" class="form-label">User Type</label>
+            <select class="form-control" id="userType" name="userType" required>
+                <option value="Learner">Learner</option>
+                <option value="Instructor">Instructor</option>
+
+                <!-- Add more user types as needed -->
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Password</label>
+            <input type="password" class="form-control" id="exampleInputPassword1" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
